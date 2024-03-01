@@ -1,14 +1,17 @@
-package main
+package controllers
 
 import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"note-api/models"
 	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
 )
+
+type Note models.Note
 
 var noteStore = make(map[string]Note)
 var id int = 0

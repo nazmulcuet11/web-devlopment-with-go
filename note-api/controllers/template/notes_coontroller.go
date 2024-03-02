@@ -1,4 +1,4 @@
-package controllers
+package template
 
 import (
 	"html/template"
@@ -33,17 +33,17 @@ func renderTemplate(w http.ResponseWriter, name string, template string, viewMod
 }
 
 // Handler for "/" which render the index page
-func GetNotesTemplateHandler(w http.ResponseWriter, r *http.Request) {
+func GetNotes(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "index", "base", repositories.GetAllNotes())
 }
 
 // Handler for "/notes/add" for add a new item
-func AddNoteTemplateHandler(w http.ResponseWriter, r *http.Request) {
+func AddNote(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "add", "base", nil)
 }
 
 // Handler for "/notes/save" for save a new item into the data store
-func SaveNoteTemplateHandler(w http.ResponseWriter, r *http.Request) {
+func SaveNote(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	title := r.PostFormValue("title")
 	description := r.PostFormValue("description")
@@ -52,7 +52,7 @@ func SaveNoteTemplateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Handler for "/notes/edit/{id}" to edit an existing item
-func EditNoteTemplateHandler(w http.ResponseWriter, r *http.Request) {
+func EditNote(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	note, err := repositories.GetNoteById(id)
@@ -64,7 +64,7 @@ func EditNoteTemplateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Handler for "/notes/update/{id}" which update an item into the data store
-func UpdateNoteTemplateHandler(w http.ResponseWriter, r *http.Request) {
+func UpdateNote(w http.ResponseWriter, r *http.Request) {
 	//Read value from route variable
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -80,7 +80,7 @@ func UpdateNoteTemplateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Handler for "/notes/delete/{id}" which delete an item form the store
-func DeleteNoteTemplateHandler(w http.ResponseWriter, r *http.Request) {
+func DeleteNote(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	err := repositories.DeleteNoteById(id)

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"note-api/controllers"
+	controllers "note-api/controllers/template"
 	"note-api/routes"
 	"note-api/test_data"
 

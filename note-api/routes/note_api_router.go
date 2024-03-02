@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"note-api/controllers"
+	controllers "note-api/controllers/api"
 
 	"github.com/gorilla/mux"
 )

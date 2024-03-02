@@ -1,0 +1,29 @@
+{{define "head"}}
+    <title>Index</title>
+{{end}} 
+
+{{define "body"}}
+<h1>Note List</h1>
+<p><a href="/notes/add">Add Note</a></p>
+<div>
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Created On</th>
+            <th>Actions</th>
+        </tr>
+        {{range .}}
+        <tr>
+            <td>{{.Title}}</td>
+            <td>{{.Description}}</td>
+            <td>{{.CreatedOn}}</td>
+            <td>
+                <a href="/notes/edit/{{.Id}}">Edit</a> |
+                <a href="/notes/delete/{{.Id}}">Delete</a>
+            </td>
+        </tr>
+        {{end}}
+    </table>
+</div>
+{{end}}

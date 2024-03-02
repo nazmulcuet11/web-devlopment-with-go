@@ -1,8 +1,13 @@
 package routes
 
-import "github.com/gorilla/mux"
+import (
+	"note-api/routes/api"
+	"note-api/routes/template"
+
+	"github.com/gorilla/mux"
+)
 
 func ConfigureNoteRoutes(r *mux.Router) {
-	ConfigureNoteApiRoutes(r)
-	ConfigureNoteTemplateRoutes(r)
+	api.ConfigureNoteApiRoutes(r)
+	template.ConfigureNoteTemplateRoutes(r)
 }

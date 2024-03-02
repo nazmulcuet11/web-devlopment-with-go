@@ -1,4 +1,4 @@
-package routes
+package template
 
 import (
 	controllers "note-api/controllers/template"

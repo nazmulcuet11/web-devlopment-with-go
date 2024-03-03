@@ -1,4 +1,4 @@
-package template
+package controllers
 
 import (
 	"html/template"
@@ -9,20 +9,30 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var templates map[string]*template.Template
-
-func InitializeTemplates() {
-	if templates == nil {
-		templates = make(map[string]*template.Template)
-	}
-
-	templates["index"] = template.Must(template.ParseFiles("templates/base.html", "templates/index.html"))
-	templates["add"] = template.Must(template.ParseFiles("templates/base.html", "templates/add.html"))
-	templates["edit"] = template.Must(template.ParseFiles("templates/base.html", "templates/edit.html"))
+type NoteTemplatleController struct {
+	templates map[string]*template.Template
 }
 
-func renderTemplate(w http.ResponseWriter, name string, template string, viewModel interface{}) {
-	tmpl, ok := templates[name]
+func NewNoteTemplatleController() *NoteTemplatleController {
+	c := NoteTemplatleController{
+		make(map[string]*template.Template),
+	}
+	c.initializeTemplates()
+	return &c
+}
+
+func (c *NoteTemplatleController) initializeTemplates() {
+	c.templates["index"] = template.Must(template.ParseFiles("templates/base.html", "templates/index.html"))
+	c.templates["add"] = template.Must(template.ParseFiles("templates/base.html", "templates/add.html"))
+	c.templates["edit"] = template.Must(template.ParseFiles("templates/base.html", "templates/edit.html"))
+}
+
+func (c *NoteTemplatleController) renderTemplate(
+	w http.ResponseWriter, name string,
+	template string,
+	viewModel interface{},
+) {
+	tmpl, ok := c.templates[name]
 	if !ok {
 		http.Error(w, "The template does not exist.", http.StatusInternalServerError)
 	}
@@ -33,17 +43,17 @@ func renderTemplate(w http.ResponseWriter, name string, template string, viewMod
 }
 
 // Handler for "/" which render the index page
-func GetNotes(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, "index", "base", repositories.GetAllNotes())
+func (c *NoteTemplatleController) GetNotes(w http.ResponseWriter, r *http.Request) {
+	c.renderTemplate(w, "index", "base", repositories.GetAllNotes())
 }
 
 // Handler for "/notes/add" for add a new item
-func AddNote(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, "add", "base", nil)
+func (c *NoteTemplatleController) AddNote(w http.ResponseWriter, r *http.Request) {
+	c.renderTemplate(w, "add", "base", nil)
 }
 
 // Handler for "/notes/save" for save a new item into the data store
-func SaveNote(w http.ResponseWriter, r *http.Request) {
+func (c *NoteTemplatleController) SaveNote(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	title := r.PostFormValue("title")
 	description := r.PostFormValue("description")
@@ -52,7 +62,7 @@ func SaveNote(w http.ResponseWriter, r *http.Request) {
 }
 
 // Handler for "/notes/edit/{id}" to edit an existing item
-func EditNote(w http.ResponseWriter, r *http.Request) {
+func (c *NoteTemplatleController) EditNote(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	note, err := repositories.GetNoteById(id)
@@ -60,11 +70,11 @@ func EditNote(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not find note", http.StatusBadRequest)
 		return
 	}
-	renderTemplate(w, "edit", "base", note)
+	c.renderTemplate(w, "edit", "base", note)
 }
 
 // Handler for "/notes/update/{id}" which update an item into the data store
-func UpdateNote(w http.ResponseWriter, r *http.Request) {
+func (c *NoteTemplatleController) UpdateNote(w http.ResponseWriter, r *http.Request) {
 	//Read value from route variable
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -80,7 +90,7 @@ func UpdateNote(w http.ResponseWriter, r *http.Request) {
 }
 
 // Handler for "/notes/delete/{id}" which delete an item form the store
-func DeleteNote(w http.ResponseWriter, r *http.Request) {
+func (c *NoteTemplatleController) DeleteNote(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	err := repositories.DeleteNoteById(id)

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	controllers "note-api/controllers/template"
 	"note-api/routes"
 	"note-api/test_data"
 
@@ -13,9 +12,6 @@ import (
 func main() {
 	// populate test data
 	test_data.PopulateTestNotes()
-
-	// initialize templates
-	controllers.InitializeTemplates()
 
 	r := mux.NewRouter().StrictSlash(false)
 	routes.ConfigureNoteRoutes(r)

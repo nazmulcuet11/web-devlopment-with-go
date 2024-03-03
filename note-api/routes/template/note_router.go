@@ -1,16 +1,17 @@
 package template
 
 import (
-	controllers "note-api/controllers/template"
+	"note-api/controllers"
 
 	"github.com/gorilla/mux"
 )
 
 func ConfigureNoteTemplateRoutes(r *mux.Router) {
-	r.HandleFunc("/", controllers.GetNotes)
-	r.HandleFunc("/notes/add", controllers.AddNote)
-	r.HandleFunc("/notes/save", controllers.SaveNote)
-	r.HandleFunc("/notes/edit/{id}", controllers.EditNote)
-	r.HandleFunc("/notes/update/{id}", controllers.UpdateNote)
-	r.HandleFunc("/notes/delete/{id}", controllers.DeleteNote)
+	c := controllers.NewNoteTemplatleController()
+	r.HandleFunc("/", c.GetNotes)
+	r.HandleFunc("/notes/add", c.AddNote)
+	r.HandleFunc("/notes/save", c.SaveNote)
+	r.HandleFunc("/notes/edit/{id}", c.EditNote)
+	r.HandleFunc("/notes/update/{id}", c.UpdateNote)
+	r.HandleFunc("/notes/delete/{id}", c.DeleteNote)
 }

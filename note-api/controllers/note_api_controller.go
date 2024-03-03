@@ -11,17 +11,18 @@ import (
 )
 
 type NoteApiController struct {
+	repo repositories.NoteRepository
 }
 
-func NewNoteApiController() *NoteApiController {
-	return &NoteApiController{}
+func NewNoteApiController(repo repositories.NoteRepository) *NoteApiController {
+	return &NoteApiController{repo}
 }
 
 // HTTP Get - /api/notes
 func (c *NoteApiController) GetNote(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	notes := repositories.GetAllNotes()
+	notes := c.repo.GetAllNotes()
 	j, err := json.Marshal(notes)
 	if err != nil {
 		log.Println(err)
@@ -43,7 +44,7 @@ func (c *NoteApiController) PostNote(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	note, err = repositories.AddNote(note)
+	note, err = c.repo.AddNote(note)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -74,7 +75,7 @@ func (c *NoteApiController) PutNote(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	newNote.Id = vars["id"]
-	err = repositories.UpdateNote(newNote)
+	err = c.repo.UpdateNote(newNote)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -88,7 +89,7 @@ func (c *NoteApiController) DeleteNote(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	vars := mux.Vars(r)
-	err := repositories.DeleteNoteById(vars["id"])
+	err := c.repo.DeleteNoteById(vars["id"])
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)

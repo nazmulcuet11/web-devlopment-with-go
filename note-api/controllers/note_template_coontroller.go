@@ -11,11 +11,13 @@ import (
 
 type NoteTemplatleController struct {
 	templates map[string]*template.Template
+	repo      repositories.NoteRepository
 }
 
-func NewNoteTemplatleController() *NoteTemplatleController {
+func NewNoteTemplatleController(repo repositories.NoteRepository) *NoteTemplatleController {
 	c := NoteTemplatleController{
 		make(map[string]*template.Template),
+		repo,
 	}
 	c.initializeTemplates()
 	return &c
@@ -44,7 +46,7 @@ func (c *NoteTemplatleController) renderTemplate(
 
 // Handler for "/" which render the index page
 func (c *NoteTemplatleController) GetNotes(w http.ResponseWriter, r *http.Request) {
-	c.renderTemplate(w, "index", "base", repositories.GetAllNotes())
+	c.renderTemplate(w, "index", "base", c.repo.GetAllNotes())
 }
 
 // Handler for "/notes/add" for add a new item
@@ -57,7 +59,7 @@ func (c *NoteTemplatleController) SaveNote(w http.ResponseWriter, r *http.Reques
 	r.ParseForm()
 	title := r.PostFormValue("title")
 	description := r.PostFormValue("description")
-	repositories.AddNote(models.Note{Title: title, Description: description})
+	c.repo.AddNote(models.Note{Title: title, Description: description})
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
@@ -65,7 +67,7 @@ func (c *NoteTemplatleController) SaveNote(w http.ResponseWriter, r *http.Reques
 func (c *NoteTemplatleController) EditNote(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
-	note, err := repositories.GetNoteById(id)
+	note, err := c.repo.GetNoteById(id)
 	if err != nil {
 		http.Error(w, "Could not find note", http.StatusBadRequest)
 		return
@@ -81,7 +83,7 @@ func (c *NoteTemplatleController) UpdateNote(w http.ResponseWriter, r *http.Requ
 	title := r.PostFormValue("title")
 	description := r.PostFormValue("description")
 	noteToUpdate := models.Note{Id: id, Title: title, Description: description}
-	err := repositories.UpdateNote(noteToUpdate)
+	err := c.repo.UpdateNote(noteToUpdate)
 	if err != nil {
 		http.Error(w, "Could not update note", http.StatusBadRequest)
 		return
@@ -93,7 +95,7 @@ func (c *NoteTemplatleController) UpdateNote(w http.ResponseWriter, r *http.Requ
 func (c *NoteTemplatleController) DeleteNote(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
-	err := repositories.DeleteNoteById(id)
+	err := c.repo.DeleteNoteById(id)
 	if err != nil {
 		http.Error(w, "Could not delete note", http.StatusBadRequest)
 	}

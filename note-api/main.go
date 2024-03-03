@@ -4,18 +4,19 @@ import (
 	"fmt"
 	"net/http"
 	"note-api/controllers"
+	"note-api/repositories"
 	"note-api/routes"
-	"note-api/test_data"
 
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	// populate test data
-	test_data.PopulateTestNotes()
+	repo := repositories.NewInMemoryNoteRepository()
+	repo.PopulateTestNotes()
 
-	apiController := controllers.NewNoteApiController()
-	templateController := controllers.NewNoteTemplatleController()
+	apiController := controllers.NewNoteApiController(repo)
+	templateController := controllers.NewNoteTemplatleController(repo)
 	r := mux.NewRouter().StrictSlash(false)
 	routes.ConfigureNoteApiRoutes(apiController, r)
 	routes.ConfigureNoteTemplateRoutes(templateController, r)

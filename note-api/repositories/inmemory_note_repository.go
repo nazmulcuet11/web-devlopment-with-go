@@ -5,6 +5,7 @@ import (
 	"log"
 	"note-api/models"
 	"note-api/test_data"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -28,6 +29,9 @@ func (r *InMemoryNoteRepository) GetAllNotes() []models.Note {
 		notes[i] = note
 		i++
 	}
+	sort.Slice(notes, func(x, y int) bool {
+		return notes[x].Id <= notes[y].Id
+	})
 	return notes
 }
 

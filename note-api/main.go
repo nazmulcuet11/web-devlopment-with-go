@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"note-api/controllers"
 	"note-api/repositories"
@@ -21,9 +22,6 @@ func main() {
 	routes.ConfigureNoteApiRoutes(apiController, r)
 	routes.ConfigureNoteTemplateRoutes(templateController, r)
 
-	fmt.Printf("Listening at: 8080")
-	err := http.ListenAndServe(":8080", r)
-	if err != nil {
-		panic(err)
-	}
+	fmt.Println("Server started, listening on port: 8080")
+	log.Fatal(http.ListenAndServe(":8080", r))
 }

@@ -26,7 +26,8 @@ func main() {
 	routes.ConfigureNoteTemplateRoutes(templateController, r)
 
 	handler := alice.New(
-		middlewares.LogginHandler,
+		middlewares.CustomLoggingHandler,
+		middlewares.FileLoggingHandler,
 		handlers.CompressHandler,
 	)
 	fmt.Println("Server started, listening on port: 8080")

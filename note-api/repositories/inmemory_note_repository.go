@@ -73,6 +73,7 @@ func (r *InMemoryNoteRepository) UpdateNote(newNote models.Note) error {
 	}
 	newNote.CreatedOn = existingNote.CreatedOn
 	r.notesMap[newNote.Id] = newNote
+	log.Println("Updated note: ", newNote)
 	return nil
 }
 
@@ -82,6 +83,7 @@ func (r *InMemoryNoteRepository) DeleteNoteById(id string) error {
 		return errors.New("note does not exist")
 	}
 	delete(r.notesMap, id)
+	log.Println("Deleted note with id: ", id)
 	return nil
 }
 

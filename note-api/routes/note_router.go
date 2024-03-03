@@ -1,13 +1,30 @@
 package routes
 
 import (
-	"note-api/routes/api"
-	"note-api/routes/template"
+	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-func ConfigureNoteRoutes(r *mux.Router) {
-	api.ConfigureNoteApiRoutes(r)
-	template.ConfigureNoteTemplateRoutes(r)
+type NoteRouter struct {
+	r              *mux.Router
+	apiRouter      *NoteApiRouter
+	templateRouter *NoteTemplateRouter
+}
+
+func NewNoteRouter(
+	r *mux.Router,
+	apiRouter *NoteApiRouter,
+	templateRouter *NoteTemplateRouter,
+) *NoteRouter {
+	return &NoteRouter{r, apiRouter, templateRouter}
+}
+
+func (router *NoteRouter) ConfigureRoutes() {
+	router.apiRouter.ConfigureRoutes()
+	router.templateRouter.ConfigureRoutes()
+}
+
+func (router *NoteRouter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	router.r.ServeHTTP(w, r)
 }

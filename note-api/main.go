@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"note-api/controllers"
+	"note-api/middlewares"
 	"note-api/repositories"
 	"note-api/routes"
 
@@ -23,5 +24,5 @@ func main() {
 	routes.ConfigureNoteTemplateRoutes(templateController, r)
 
 	fmt.Println("Server started, listening on port: 8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":8080", middlewares.LogginHandler(r)))
 }

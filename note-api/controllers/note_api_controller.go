@@ -1,4 +1,4 @@
-package api
+package controllers
 
 import (
 	"encoding/json"
@@ -10,8 +10,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
+type NoteApiController struct {
+}
+
+func NewNoteApiController() *NoteApiController {
+	return &NoteApiController{}
+}
+
 // HTTP Get - /api/notes
-func GetNote(w http.ResponseWriter, r *http.Request) {
+func (c *NoteApiController) GetNote(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	notes := repositories.GetAllNotes()
@@ -26,7 +33,7 @@ func GetNote(w http.ResponseWriter, r *http.Request) {
 }
 
 // HTTP Post - /api/notes
-func PostNote(w http.ResponseWriter, r *http.Request) {
+func (c *NoteApiController) PostNote(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var note models.Note
@@ -54,7 +61,7 @@ func PostNote(w http.ResponseWriter, r *http.Request) {
 }
 
 // HTTP Put - /api/notes/{id}
-func PutNote(w http.ResponseWriter, r *http.Request) {
+func (c *NoteApiController) PutNote(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var newNote models.Note
@@ -77,7 +84,7 @@ func PutNote(w http.ResponseWriter, r *http.Request) {
 }
 
 // HTTP Delete - /api/notes/{id}
-func DeleteNote(w http.ResponseWriter, r *http.Request) {
+func (c *NoteApiController) DeleteNote(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	vars := mux.Vars(r)

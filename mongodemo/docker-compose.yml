@@ -1,0 +1,14 @@
+version: '1.0'
+
+services:
+  demo_mongo_db:
+    image: mongo:7.0.4
+    container_name: demo_mongo_db
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./data/demo_mongo_db/data/db:/data/db
